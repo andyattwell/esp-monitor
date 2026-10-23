@@ -1,0 +1,12 @@
+{
+    "apssid" : "APDefault",
+    "appass" : "12345678",
+    "aptimeout" : 300000,
+    "hostname" : "",
+    "wifissid" : "",
+    "wifipass" : "",
+	"wificonnect" : "false",
+    "phoneno" : "",
+    "phoneno2" : "",
+	"alertmsg" : "¡¡ALERTA!! - Subió el nivel de agua."
+}

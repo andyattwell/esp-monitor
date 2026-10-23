@@ -1,0 +1,5 @@
+build/
+*.log
+full/data/config.json
+app/node_modules/
+app/dist/

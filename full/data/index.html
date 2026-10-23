@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ESPMonitor</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+  <div id="app">
+    <nav class="sidebar">
+      <h3 class="section-title">Servicios</h3>
+      <ul id="servicios">
+        <li>
+          <strong>AP: </strong><span id="apstatus"></span>
+        </li>
+        <li>
+          <strong>GSM: </strong><span id="gsmstatus"></span>
+        </li>
+        <!-- <li>
+          <strong>WIFI: </strong><span id="wifistatus"></span>
+          <button id="wificonnect" disabled>Conectar</button>
+        </li> -->
+      </ul>
+    </nav>
+    <main>
+      <h3 class="section-title">Configuración</h3>
+      <div class="content">
+        <form id="config-form">
+          <fieldset>
+            <legend>Configuración de AP</legend>
+            <div class="control-group">
+                <label>SSID</label>
+                <input type="text" name="apssid" id="apssid" placeholder="SSID">
+            </div>
+            <div class="control-group">
+              <label>Contraseña</label>
+              <input type="password" name="appass" id="appass" placeholder="Contraseña">
+            </div>
+            <div class="control-group">
+              <label>AP Timeout</label>
+              <input type="number" name="aptimeout" id="aptimeout" placeholder="">
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Configuración de Alarmas</legend>
+            <div class="control-group">
+                <label>Teléfono 1</label>
+                <input type="number" name="phoneno" id="phoneno" placeholder="Teléfono">
+            </div>
+            <div class="control-group">
+                <label>Teléfono 2</label>
+                <input type="number" name="phoneno2" id="phoneno2" placeholder="Teléfono 2">
+            </div>
+            <div class="control-group">
+                <label>Mensaje de alerta</label>
+                <input type="text" name="alertmsg" id="alertmsg" placeholder="Mensaje que se le enviará">
+            </div>
+          </fieldset>
+          <div class="control-group">
+            <input type="hidden" name="data" value="data">
+            <button type="submit">Guardar</button>
+            <button type="button">Reestablecer</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+  </div>
+  <script src="jquery-3.3.1.min.js"></script>
+  <script>
+    var api = 'http://192.168.4.1/'
+    var apssid = "";
+    var appass = "";
+    var aptimeout = "";
+    var phoneno = "";
+    var phoneno2 = "";
+    var alertmsg = "";
+    var apstatus = "Desconectado";
+    var wifistatus = "Desconectado";
+    var gsmstatus = "Desconectado";
+    $(document).ready(function(){
+
+      $.get(api+'config')
+      .done(function(data) {
+        console.log("data");
+        console.log(data);
+        apssid = data.config.apssid;
+        appass = data.config.appass;
+        aptimeout = (data.config.aptimeout / 1000) / 60;
+        phoneno = data.config.phoneno;
+        phoneno2 = data.config.phoneno2;
+        alertmsg = data.config.alertmsg;
+        
+        if(data.apip){
+          apstatus = data.config.apstatus;
+        }
+
+        if(data.wifi && data.wifi.status != 0){
+          wifistatus = data.wifi.ssid;
+          $("#wificonnect").css("display", 'none');
+          $("#wificonnect").attr("disabled", true);
+        } else {
+          $("#wificonnect").attr("disabled", false);
+        }
+
+        if(data.gsm){
+          gsmstatus = data.gsm.status;
+        }
+      })
+      .fail(function(data) {
+        console.log("Error");
+        console.log(data.responseText);
+        alert("Error al iniciar app...\n               :(");
+      })
+      .always(function(){
+        $("#apssid").val(apssid);
+        $("#appass").val(appass);
+        $("#aptimeout").val(aptimeout);
+        $("#phoneno").val(phoneno);
+        $("#phoneno2").val(phoneno2);
+        $("#alertmsg").val(alertmsg);
+        $("#apstatus").text(apstatus);
+        $("#wifistatus").text(wifistatus);
+        $("#gsmstatus").text(gsmstatus);
+      });
+
+      $("#config-form").submit(function(e){
+        e.preventDefault();
+        $("#aptimeout").val()
+        
+        var t0 = $("#aptimeout").val();
+        var t1 = (t0 * 1000) * 60;
+        $("#aptimeout").val(t1)
+        
+        var data = $(this).serialize();
+        $("input").attr('disabled', true);
+        
+        $.ajax({
+          url: api+'config',
+          type: "POST",
+          data: data,
+          processData: false,  // tell jQuery not to process the data
+        })
+        .done(function() {
+          alert( "Datos guardados!\n           :)" );
+        })
+        .fail(function(error) {
+          alert("Error al guardar datos...\n               :(");
+          console.warn("Error")
+          console.log(error)
+        })
+        .always(function(){
+          $("#aptimeout").val(t0)
+          $("input").attr('disabled', false);
+        });
+      });
+
+      // $("#wificonnect").on("click", function(e){
+      //   e.preventDefault();
+      //   $.post("http://localhost/espmonitor/test.php")
+      //   .done(function() {
+      //     alert( "Datos guardados!\n           :)" );
+      //   })
+      //   .fail(function() {
+      //     alert("Error al guardar datos...\n               :(");
+      //   });
+      // })
+    });
+  </script>
+</body>
+
+</html>

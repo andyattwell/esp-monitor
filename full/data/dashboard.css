@@ -1,0 +1,71 @@
+*,html{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+  font-size: .875rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+.section-title{
+    padding: 10px;
+    border-bottom: 1px solid #000;
+}
+
+main{
+    position: fixed;
+    overflow-y: auto;
+    width: 80%;
+    height: 100%;
+    right:0;
+    top: 0;
+    bottom: 0;
+    background-color: rgb(43, 43, 43);
+    display: block;
+    color:#fff;
+}
+
+main > .content {
+    padding: 10px;
+}
+
+main > .content > form > fieldset {
+    margin: 10px 0;
+}
+
+main > .content > form > fieldset > .control-group {
+    float:left;
+    margin: 5px 0;
+}
+
+main > .content > form > fieldset > .control-group label{
+    width: 100px;
+    display: block;
+    float: left;
+    margin-left: 10px;
+}
+main > .content > form > fieldset > .control-group input{
+    width: 400px;
+    display: block;
+    float: left
+}
+/*
+ * Sidebar
+ */
+
+.sidebar {
+  position: fixed;
+  overflow-y: auto;
+  width: 20%;
+  height: 100%;
+  left:0;
+  top: 0;
+  bottom: 0;
+  background-color: rgb(189, 189, 189);
+}
+
+#servicios li {
+    padding:10px;
+    border-bottom: 1px solid #000
+}
