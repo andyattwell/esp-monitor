@@ -3,3 +3,4 @@ build/
 full/data/config.json
 app/node_modules/
 app/dist/
+firmware-v2/main/data/config.json

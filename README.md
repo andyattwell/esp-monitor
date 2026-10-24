@@ -1,12 +1,23 @@
 # ESP Monitor
 
-Water-level alarm built on an ESP8285 with a GSM module. When the level sensor (a reed switch) trips, the device sends an SMS alert and repeats it every 5 minutes while the level stays high. Alerts go over the cellular network, so it works where there is no Wi-Fi. It is configured from a small web app served over its own Wi-Fi access point.
+Water-level alarm built on an ESP8285 with a GSM module. When the level sensor (a reed switch) trips, the device sends an SMS alert and repeats it every 5 minutes while the level stays high. Alerts go over the cellular network, so it works where there is no Wi-Fi. It is configured from a small web app served over its own Wi-Fi access point. A second firmware version also drives a drainage pump (see below).
 
 ## How it works
 
 - **Firmware** (`full/full.ino`): reads the level sensor, sends SMS alerts through the GSM module (TinyGSM) and exposes a REST API on the device, including endpoints to place test calls and send messages.
 - **Configuration** is stored as JSON on the device's SPIFFS (`full/data/`), with a default file used for hard resets.
 - **Web app** (`app/`): a Vue app to set up the access point, Wi-Fi, alarm phone numbers and alert message, check GSM status (operator, signal, battery) and send test calls or messages.
+
+## Firmware v2: pump control
+
+`firmware-v2/` is a modular rewrite that adds a drainage pump driven by a relay:
+
+- Two level sensors define three levels (normal, high, critical).
+- Every level change, up or down, sends an SMS notification.
+- At the critical level the relay turns the pump on automatically (configurable with `autoTurnOn`).
+- A push button toggles the pump by hand.
+
+The code is split into modules: `SensorModule` (levels, pump relay, button), `AlertModule` (SMS through the GSM modem), `ConfigModule`, `ApModule`, `HttpServerModule` and `TestSuiteModule` for checking the hardware over serial. The wiring diagram is in `firmware-v2/esquema.svg`.
 
 ## Hardware
 

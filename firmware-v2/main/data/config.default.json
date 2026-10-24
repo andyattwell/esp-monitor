@@ -1,0 +1,8 @@
+{
+    "apssid" : "APDefault",
+    "appass" : "12345678",
+    "aptimeout" : 300000,
+    "phoneno" : "",
+    "phoneno2" : "",
+    "autoTurnOn" : false
+}
